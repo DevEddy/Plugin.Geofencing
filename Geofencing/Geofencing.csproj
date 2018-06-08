@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!--Work around so the conditions work below-->
     <TargetFrameworks></TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid80;uap10.0.16299</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid80;</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid80</TargetFrameworks>
     <!--Feel free to add as many targets as you need below
     netstandard1.0;netstandard2.0;MonoAndroid80;Xamarin.iOS10;uap10.0.16299;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;Tizen40
@@ -28,21 +28,21 @@
     <LangVersion>7.1</LangVersion>
     
     <!--TODO: Fill these in-->
-    <PackageLicenseUrl>LINK TO LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>LINK TO PROJECT</PackageProjectUrl>
-    <RepositoryUrl>LINK TO PROJECT</RepositoryUrl>
-    <PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
-    <PackageIconUrl>ICON URL</PackageIconUrl>
-    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, Geofencing</PackageTags>
+    <PackageLicenseUrl>https://github.com/DevEddy/Plugin.Geofencing</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/DevEddy/Plugin.Geofencing</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DevEddy/Plugin.Geofencing</RepositoryUrl>
+    <PackageReleaseNotes>https://github.com/DevEddy/Plugin.Geofencing</PackageReleaseNotes>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageTags>xamarin, ios, android, xamarin.forms, plugin, geofencing</PackageTags>
     
-    <Title>Geofencing Plugin for Xamarin and Windows</Title>
-    <Summary>Summary of nuget</Summary>
-    <Description>Plugin Description</Description>
-    
-    
-    <Owners>YOU</Owners>
-    <Authors>YOU</Authors>
+    <Title>Geofencing Plugin for Xamarin</Title>
+    <Summary>Geofencing</Summary>
+    <Description>Geofencing with pathsense on android</Description>
+        
+    <Owners>Eduard Schäfer</Owners>
+    <Authors>Eduard Schäfer</Authors>
     <Copyright>Copyright 2018</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
@@ -57,38 +57,40 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.4.0" PrivateAssets="All" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />
     <Compile Include="**\*.shared.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.6" />
-    <Compile Include="**\*.uwp.cs" />
-    <!--
-    If you need to add sdk references:
-     <SDKReference Include="WindowsMobile, Version=10.0.16299.0">
-      <Name>Windows Mobile Extensions for the UWP</Name>
-    </SDKReference>
-    -->
-  </ItemGroup>
-
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <Reference Include="PathsenseAndroidSdkGeofencingXamarin">
+      <HintPath>PathsenseAndroidSdkGeofencingXamarin.dll</HintPath>
+    </Reference>
+    <PackageReference Include="MarcelloDB">
+      <Version>1.0.7</Version>
+    </PackageReference>    
     <Compile Include="**\*.android.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
+    <PackageReference Include="MarcelloDB">
+      <Version>1.0.7</Version>
+    </PackageReference>
     <Compile Include="**\*.apple.cs" />
   </ItemGroup>
-
+  
   <!--Additional item groups-->
   <!--
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.6" />
+    <Compile Include="**\*.uwp.cs" />
+  </ItemGroup>
+  
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.TVOS')) ">
     <Compile Include="**\*.tvos.cs" />
   </ItemGroup>
-
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.WatchOS')) ">
     <Compile Include="**\*.watchos.cs" />
@@ -98,7 +100,6 @@
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.Mac')) ">
     <Compile Include="**\*.mac.cs" />
   </ItemGroup>
-
   
    <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
     <Compile Include="**\*.netcore.cs" />
@@ -113,8 +114,5 @@
     <Compile Include="**\*.dotnet.cs" />
   </ItemGroup>
   -->
-
-
-
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>
