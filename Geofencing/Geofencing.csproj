@@ -58,7 +58,8 @@
 
   <ItemGroup>
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />
-    <Compile Include="**\*.shared.cs" />
+    <Compile Include="**/Shared/**/*.cs" />
+    <None Include="**/Shared/**/*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
@@ -66,19 +67,21 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Reference Include="PathsenseAndroidSdkGeofencingXamarin">
-      <HintPath>PathsenseAndroidSdkGeofencingXamarin.dll</HintPath>
+      <HintPath>**/Platform/Android/PathsenseAndroidSdkGeofencingXamarin.dll</HintPath>
     </Reference>
     <PackageReference Include="MarcelloDB">
       <Version>1.0.7</Version>
-    </PackageReference>    
-    <Compile Include="**\*.android.cs" />
+    </PackageReference>
+    <PackageReference Include="Xamarin.GooglePlayServices.Location">
+      <Version>60.1142.1</Version>
+    </PackageReference>
+    <Compile Include="**/Platform/Android/**/*.cs" />
+    <None Include="**/Platform/Android/**/*.cs" />  
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-    <PackageReference Include="MarcelloDB">
-      <Version>1.0.7</Version>
-    </PackageReference>
-    <Compile Include="**\*.apple.cs" />
+    <Compile Include="**/Platform/Apple/**/*.cs" />
+    <None Include="**/Platform/Apple/**/*.cs" />
   </ItemGroup>
   
   <!--Additional item groups-->

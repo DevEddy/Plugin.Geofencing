@@ -1,6 +1,5 @@
 ﻿using Prism;
 using Prism.Ioc;
-using Geofencing.Sample.ViewModels;
 using Geofencing.Sample.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -31,6 +30,18 @@ namespace Geofencing.Sample
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+        }
+
+        protected override void OnStart()
+        {
+            Plugin.Geofencing.CrossGeofencing.Current.RegionStatusChanged += Current_RegionStatusChanged;
+            base.OnStart();
+        }
+
+        private void Current_RegionStatusChanged(object sender, Plugin.Geofencing.GeofenceStatusChangedEventArgs e)
+        {
+            var geofencePlaceId = e.Region.Identifier;
+            var entered = e.Status == Plugin.Geofencing.GeofenceStatus.Entered;
         }
     }
 }

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.appname">
 	<uses-sdk android:minSdkVersion="21" />
-        <uses-permission android:name="android.permission.INTERNET" />
-	<application android:label="Geofencing.Sample.Android" android:icon="@mipmap/ic_launcher"></application>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  
+	<application android:label="Geofencing.Sample.Android" android:icon="@mipmap/ic_launcher">
+    <meta-data android:name="com.pathsense.android.sdk.CLIENT_ID" android:value="UHgAC4bqlNp51Ot9bJBrsgehoXXVzichD3BKJBNe" />
+    <meta-data android:name="com.pathsense.android.sdk.API_KEY" android:value="cBMY70PPUk2tHxjl1sPVc7BahLqh97xb3LNoYrtK" />
+  </application>
 </manifest>
