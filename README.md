@@ -4,3 +4,6 @@ Xamarin.Android Binding can be found [here](https://github.com/DevEddy/Plugin.Ge
 
 # Nuget
 [![NuGet](https://img.shields.io/nuget/v/Plugin.Geofencing.Eddy.svg?maxAge=2592001)](https://www.nuget.org/packages/Plugin.Geofencing.Eddy/)
+
+# Info
+[Aritchie Geofence Library](https://github.com/aritchie/geofences)
