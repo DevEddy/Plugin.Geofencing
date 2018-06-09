@@ -6,4 +6,6 @@ Xamarin.Android Binding can be found [here](https://github.com/DevEddy/Plugin.Ge
 [![NuGet](https://img.shields.io/nuget/v/Plugin.Geofencing.Eddy.svg?maxAge=259200)](https://www.nuget.org/packages/Plugin.Geofencing.Eddy/)
 
 # Info
-[Aritchie Geofence Library](https://github.com/aritchie/geofences)
+Plugin.Geofencing is built with the new SDK style projects with multi-targeting enabled. This means that all code for iOS, Android exist inside of the Plugin.Geofencing project.
+
+Used as template [Aritchie Geofence Library](https://github.com/aritchie/geofences)
