@@ -3,7 +3,7 @@ Geofencing using native iOS and the [pathsense java library](https://github.com/
 Xamarin.Android Binding can be found [here](https://github.com/DevEddy/Plugin.Geofencing).
 
 # Nuget
-[![NuGet](https://img.shields.io/nuget/v/Plugin.Geofencing.Eddy.svg?maxAge=2592000)](https://www.nuget.org/packages/Plugin.Geofencing.Eddy/)
+[![NuGet](https://img.shields.io/nuget/v/Plugin.Geofencing.Eddy.svg?maxAge=259200)](https://www.nuget.org/packages/Plugin.Geofencing.Eddy/)
 
 # Info
 [Aritchie Geofence Library](https://github.com/aritchie/geofences)
