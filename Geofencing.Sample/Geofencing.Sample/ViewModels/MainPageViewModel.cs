@@ -97,7 +97,7 @@ namespace Geofencing.Sample.ViewModels
         public DelegateCommand<GeofencePlace> EditCommand { get; }
         async void OnEditCommandExecuted(GeofencePlace place)
         {
-            await NavigationService.NavigateAsync($"AddEditGeofencePlace", new NavigationParameters {
+            await NavigationService.NavigateAsync($"AddEditGeofencePage", new NavigationParameters {
                 { "place", place }
             }, false);
         }

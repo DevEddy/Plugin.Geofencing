@@ -71,7 +71,7 @@
                                                 VerticalOptions="CenterAndExpand" />
                                     </Grid>
                                     <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="ItemDeleteTapped" />
+                                        <TapGestureRecognizer Tapped="ItemEditTapped" />
                                     </Grid.GestureRecognizers>
                                 </Grid>
                             </Grid>
