@@ -7,9 +7,6 @@ using UIKit;
 
 namespace Plugin.Geofencing
 {
-    /// <summary>
-    /// Interface for $safeprojectgroupname$
-    /// </summary>
     public class GeofencingImplementation : IGeofencing
     {
         readonly CLLocationManager _locationManager;

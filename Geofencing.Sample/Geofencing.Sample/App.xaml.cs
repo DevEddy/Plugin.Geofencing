@@ -4,17 +4,15 @@ using Geofencing.Sample.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Prism.DryIoc;
+using Geofencing.Sample.Interfaces;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Geofencing.Sample
 {
     public partial class App : PrismApplication
     {
-        /* 
-         * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
-         * This imposes a limitation in which the App class must have a default constructor. 
-         * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
-         */
+        public static ILocalNotifications LocalNotifications { get; } = DependencyService.Get<ILocalNotifications>();
+
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
@@ -30,6 +28,7 @@ namespace Geofencing.Sample
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<AddEditGeofencePage>();
         }
 
         protected override void OnStart()
@@ -42,6 +41,8 @@ namespace Geofencing.Sample
         {
             var geofencePlaceId = e.Region.Identifier;
             var entered = e.Status == Plugin.Geofencing.GeofenceStatus.Entered;
+            var text = entered ? "entered" : "exited";
+            LocalNotifications.Show("Geofence update", $"{geofencePlaceId} {text}");
         }
     }
 }

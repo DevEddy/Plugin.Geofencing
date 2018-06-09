@@ -26,6 +26,16 @@ namespace Geofencing.Sample.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.label_font_size = global::Geofencing.Sample.Droid.Resource.Dimension.label_font_size;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.thumb_size = global::Geofencing.Sample.Droid.Resource.Dimension.thumb_size;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.tick_size = global::Geofencing.Sample.Droid.Resource.Dimension.tick_size;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.tool_bottom = global::Geofencing.Sample.Droid.Resource.Dimension.tool_bottom;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.tool_left = global::Geofencing.Sample.Droid.Resource.Dimension.tool_left;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.tool_right = global::Geofencing.Sample.Droid.Resource.Dimension.tool_right;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.tool_top = global::Geofencing.Sample.Droid.Resource.Dimension.tool_top;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.tooltip_textsize = global::Geofencing.Sample.Droid.Resource.Dimension.tooltip_textsize;
+			global::Com.Syncfusion.Sfrangeslider.Resource.Dimension.track_size = global::Geofencing.Sample.Droid.Resource.Dimension.track_size;
+			global::Com.Syncfusion.Sfrangeslider.Resource.String.library_name = global::Geofencing.Sample.Droid.Resource.String.library_name;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::Geofencing.Sample.Droid.Resource.Attribute.actionBarSize;
 		}
 		
@@ -2029,6 +2039,9 @@ namespace Geofencing.Sample.Droid
 			// aapt resource value: 0x7f0b0005
 			public const int item_touch_helper_swipe_escape_velocity = 2131427333;
 			
+			// aapt resource value: 0x7f0b00a4
+			public const int label_font_size = 2131427492;
+			
 			// aapt resource value: 0x7f0b0006
 			public const int mr_controller_volume_group_list_item_height = 2131427334;
 			
@@ -2092,6 +2105,24 @@ namespace Geofencing.Sample.Droid
 			// aapt resource value: 0x7f0b00a3
 			public const int notification_top_pad_large_text = 2131427491;
 			
+			// aapt resource value: 0x7f0b00a5
+			public const int thumb_size = 2131427493;
+			
+			// aapt resource value: 0x7f0b00a7
+			public const int tick_size = 2131427495;
+			
+			// aapt resource value: 0x7f0b00a9
+			public const int tool_bottom = 2131427497;
+			
+			// aapt resource value: 0x7f0b00aa
+			public const int tool_left = 2131427498;
+			
+			// aapt resource value: 0x7f0b00ab
+			public const int tool_right = 2131427499;
+			
+			// aapt resource value: 0x7f0b00a8
+			public const int tool_top = 2131427496;
+			
 			// aapt resource value: 0x7f0b0062
 			public const int tooltip_corner_radius = 2131427426;
 			
@@ -2107,6 +2138,9 @@ namespace Geofencing.Sample.Droid
 			// aapt resource value: 0x7f0b0066
 			public const int tooltip_precise_anchor_threshold = 2131427430;
 			
+			// aapt resource value: 0x7f0b00ac
+			public const int tooltip_textsize = 2131427500;
+			
 			// aapt resource value: 0x7f0b0067
 			public const int tooltip_vertical_padding = 2131427431;
 			
@@ -2115,6 +2149,9 @@ namespace Geofencing.Sample.Droid
 			
 			// aapt resource value: 0x7f0b0069
 			public const int tooltip_y_offset_touch = 2131427433;
+			
+			// aapt resource value: 0x7f0b00a6
+			public const int track_size = 2131427494;
 			
 			static Dimension()
 			{
@@ -2381,26 +2418,26 @@ namespace Geofencing.Sample.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020145
-			public const int avd_hide_password_1 = 2130837829;
-			
-			// aapt resource value: 0x7f020146
-			public const int avd_hide_password_2 = 2130837830;
-			
 			// aapt resource value: 0x7f020147
-			public const int avd_hide_password_3 = 2130837831;
+			public const int avd_hide_password_1 = 2130837831;
+			
+			// aapt resource value: 0x7f020148
+			public const int avd_hide_password_2 = 2130837832;
+			
+			// aapt resource value: 0x7f020149
+			public const int avd_hide_password_3 = 2130837833;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f020148
-			public const int avd_show_password_1 = 2130837832;
-			
-			// aapt resource value: 0x7f020149
-			public const int avd_show_password_2 = 2130837833;
-			
 			// aapt resource value: 0x7f02014a
-			public const int avd_show_password_3 = 2130837834;
+			public const int avd_show_password_1 = 2130837834;
+			
+			// aapt resource value: 0x7f02014b
+			public const int avd_show_password_2 = 2130837835;
+			
+			// aapt resource value: 0x7f02014c
+			public const int avd_show_password_3 = 2130837836;
 			
 			// aapt resource value: 0x7f020055
 			public const int common_full_open_on_phone = 2130837589;
@@ -3101,11 +3138,11 @@ namespace Geofencing.Sample.Droid
 			// aapt resource value: 0x7f02013d
 			public const int notification_icon_background = 2130837821;
 			
-			// aapt resource value: 0x7f020143
-			public const int notification_template_icon_bg = 2130837827;
+			// aapt resource value: 0x7f020145
+			public const int notification_template_icon_bg = 2130837829;
 			
-			// aapt resource value: 0x7f020144
-			public const int notification_template_icon_low_bg = 2130837828;
+			// aapt resource value: 0x7f020146
+			public const int notification_template_icon_low_bg = 2130837830;
 			
 			// aapt resource value: 0x7f02013e
 			public const int notification_tile_bg = 2130837822;
@@ -3117,10 +3154,16 @@ namespace Geofencing.Sample.Droid
 			public const int pathsense = 2130837824;
 			
 			// aapt resource value: 0x7f020141
-			public const int tooltip_frame_dark = 2130837825;
+			public const int pencil = 2130837825;
 			
 			// aapt resource value: 0x7f020142
-			public const int tooltip_frame_light = 2130837826;
+			public const int tooltip_frame_dark = 2130837826;
+			
+			// aapt resource value: 0x7f020143
+			public const int tooltip_frame_light = 2130837827;
+			
+			// aapt resource value: 0x7f020144
+			public const int trash = 2130837828;
 			
 			static Drawable()
 			{
@@ -4085,6 +4128,12 @@ namespace Geofencing.Sample.Droid
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f09004f
+			public const int ApplicationName = 2131296335;
+			
+			// aapt resource value: 0x7f09004e
+			public const int Hello = 2131296334;
+			
 			// aapt resource value: 0x7f090026
 			public const int abc_action_bar_home_description = 2131296294;
 			
@@ -4231,6 +4280,9 @@ namespace Geofencing.Sample.Droid
 			
 			// aapt resource value: 0x7f090010
 			public const int common_signin_button_text_long = 2131296272;
+			
+			// aapt resource value: 0x7f09004d
+			public const int library_name = 2131296333;
 			
 			// aapt resource value: 0x7f090011
 			public const int mr_button_content_description = 2131296273;

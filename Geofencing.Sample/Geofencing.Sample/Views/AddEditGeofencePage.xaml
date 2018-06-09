@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns:local="clr-namespace:Geofencing.Sample;assembly=Geofencing.Sample" 
+             xmlns:slide="clr-namespace:Syncfusion.SfRangeSlider.XForms;assembly=Syncfusion.SfRangeSlider.XForms"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Geofencing.Sample.Views.AddEditGeofencePage"
+             Title="{Binding Title}">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Radius in m" HorizontalOptions="Center"  />
+            <slide:SfRangeSlider
+                ShowRange="false"                
+                HorizontalOptions="FillAndExpand"
+                HeightRequest="30"
+                Minimum="100"
+                Maximum="2000"
+                StepFrequency="10"
+                ToolTipPlacement="TopLeft"
+                LabelPlacement="BottomRight"
+                TickPlacement="None"
+                ShowValueLabel="false"
+                ShowCustomLabel="false"
+                ValuePlacement="BottomRight"
+                SnapsTo="StepValues"
+                Value="{Binding Place.Radius, Mode=TwoWay, Converter={x:Static local:DoubleToIntConverter.Instance}}"
+                Orientation="Horizontal">
+            </slide:SfRangeSlider>
+
+            <StackLayout Orientation="Horizontal">
+                <Entry Placeholder="Latitude..." HorizontalOptions="FillAndExpand" Text="{Binding Place.Latitude, Mode=TwoWay, Converter={x:Static local:StringToDoubleConverter.Instance}}"  />
+                <Entry Placeholder="Longitude..." HorizontalOptions="FillAndExpand" Text="{Binding Place.Longitude, Mode=TwoWay, Converter={x:Static local:StringToDoubleConverter.Instance}}" />
+            </StackLayout>
+            <Button Text="Save" HorizontalOptions="FillAndExpand" Command="{Binding SaveCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

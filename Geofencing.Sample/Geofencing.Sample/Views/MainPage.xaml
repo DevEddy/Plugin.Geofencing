@@ -1,11 +1,104 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage xmlns:local="clr-namespace:Geofencing.Sample;assembly=Geofencing.Sample" 
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              x:Class="Geofencing.Sample.Views.MainPage"
+             BackgroundColor="WhiteSmoke"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
-    </StackLayout>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add" Command="{Binding AddCommand}" />
+    </ContentPage.ToolbarItems>
 
+    <ContentPage.Content>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+                <syncfusion:SfListView x:Name="list"
+                            AllowSwiping="True" 
+                            AutoFitMode="Height"
+                            ItemTapped="ItemTapped"
+                            ItemHolding="ItemHolding"
+                            SwipeStarted="SwipeStarted" 
+                            SwipeEnded="SwipeEnded" 
+                            IsVisible="true"
+                            SelectionMode="None"
+                            SelectionGesture="Tap"
+                            ItemsSource="{Binding GeofencePlaces, Mode=TwoWay}">
+
+                    <syncfusion:SfListView.RightSwipeTemplate>
+                        <DataTemplate x:Name="RightSwipeTemplate">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid BackgroundColor="#DC595F" HorizontalOptions="Fill" VerticalOptions="Fill"  Grid.Column="0">
+                                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Image
+                                                Grid.Column="0"
+                                                Grid.Row="0"
+                                                Source="trash.png"
+                                                WidthRequest="25" HeightRequest="25" 
+                                                BackgroundColor="Transparent"
+                                                HorizontalOptions="Center" 
+                                                VerticalOptions="CenterAndExpand" />
+                                    </Grid>
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="ItemDeleteTapped" />
+                                    </Grid.GestureRecognizers>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </syncfusion:SfListView.RightSwipeTemplate>
+
+                    <syncfusion:SfListView.LeftSwipeTemplate>
+                        <DataTemplate x:Name="LeftSwipeTemplate">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid BackgroundColor="#5D6063" HorizontalOptions="Fill" VerticalOptions="Fill"  Grid.Column="0">
+                                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Image
+                                                Grid.Column="0"
+                                                Grid.Row="0" 
+                                                Source="pencil.png"
+                                                WidthRequest="25" HeightRequest="25" 
+                                                BackgroundColor="Transparent"
+                                                HorizontalOptions="Center" 
+                                                VerticalOptions="CenterAndExpand" />
+                                    </Grid>
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="ItemDeleteTapped" />
+                                    </Grid.GestureRecognizers>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </syncfusion:SfListView.LeftSwipeTemplate>
+
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="4">
+                                <Frame Padding="6">
+                                    <StackLayout HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding ID}" />
+                                        <Label Text="{Binding RadiusDescription}" />
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+            </StackLayout>
+            <StackLayout IsVisible="{Binding ShowListView, Converter={x:Static local:InverseBoolConverter.Instance}}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" Padding="16,0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+                <Label Text="No geofences available" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="CenterAndExpand" />
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddCommand}" />
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
 </ContentPage>
