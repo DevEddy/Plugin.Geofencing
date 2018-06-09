@@ -10,7 +10,7 @@
     -->
     <AssemblyName>Plugin.Geofencing</AssemblyName>
     <RootNamespace>Plugin.Geofencing</RootNamespace>
-    <PackageId>Plugin.Geofencing</PackageId>
+    <PackageId>Plugin.Geofencing.Eddy</PackageId>
     
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -37,7 +37,7 @@
     
     <Title>Geofencing Plugin for Xamarin</Title>
     <Summary>Geofencing</Summary>
-    <Description>Geofencing with pathsense on android</Description>
+    <Description>Geofencing using native iOS and the pathsense java library for Android.</Description>
         
     <Owners>Eduard Schäfer</Owners>
     <Authors>Eduard Schäfer</Authors>
