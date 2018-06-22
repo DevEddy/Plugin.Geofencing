@@ -73,7 +73,7 @@
       <Version>1.0.7</Version>
     </PackageReference>
     <PackageReference Include="Pathsense.Location.Android.Eddy">
-      <Version>1.0.0</Version>
+      <Version>3.1.0.7</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Location">
       <Version>60.1142.1</Version>
