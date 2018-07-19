@@ -12,14 +12,14 @@ namespace Plugin.Geofencing
         public double TotalMeters => TotalKilometers * 1000;
         public double TotalKilometers { get; set; }
 
-        public override string ToString() => $"{TotalKilometers} KM";
+        public override string ToString() => $"{TotalKilometers} km";
         public override int GetHashCode() => TotalKilometers.GetHashCode();
         public override bool Equals(object obj)
         {
             if(!(obj is Distance other))
                 return false;
 
-            if (this.TotalKilometers.Equals(other.TotalKilometers))
+            if (TotalKilometers.Equals(other.TotalKilometers))
                 return false;
 
             return false;
@@ -32,6 +32,6 @@ namespace Plugin.Geofencing
         public static bool operator ==(Distance x, Distance y) => x.TotalKilometers == y.TotalKilometers;
         public static bool operator !=(Distance x, Distance y) => x.TotalKilometers != y.TotalKilometers;
         public static bool operator >(Distance x, Distance y) => x.TotalKilometers > y.TotalKilometers;
-        public static bool operator <(Distance x, Distance y) => x.TotalKilometers<y.TotalKilometers;
+        public static bool operator <(Distance x, Distance y) => x.TotalKilometers < y.TotalKilometers;
     }
 }

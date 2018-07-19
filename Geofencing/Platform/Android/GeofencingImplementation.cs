@@ -1,132 +1,170 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Gms.Location;
-using Com.Pathsense.Android.Sdk.Location;
+using Plugin.Geofencing.Platform.Android;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
+[assembly: UsesPermission(Android.Manifest.Permission.AccessFineLocation)]
+[assembly: UsesFeature("android.hardware.location.gps")]
+[assembly: UsesFeature("android.hardware.location.network")]
 namespace Plugin.Geofencing
 {
     /// <summary>
     /// Interface for $safeprojectgroupname$
     /// </summary>
-    public class GeofencingImplementation : Java.Lang.Object, IGeofencing
+    public class GeofencingImplementation : IGeofencing
     {
-        public event EventHandler<GeofenceStatusChangedEventArgs> RegionStatusChanged;
-        public Distance DesiredAccuracy { get; set; } = Distance.FromMeters(200);
-        public IReadOnlyList<GeofenceRegion> MonitoredRegions => _states.Values.Select(x => x.Region).ToList();
-
-        readonly IDictionary<string, GeofenceState> _states;
-        readonly PathsenseLocationProviderApi _pathSenseApi;
+        readonly GeofencingClient client;
+        readonly IList<GeofenceRegion> regions;
+        readonly object syncLock;
+        PendingIntent geofencePendingIntent;
 
         public GeofencingImplementation()
         {
-            _states = new Dictionary<string, GeofenceState>();
-            _pathSenseApi = PathsenseLocationProviderApi.GetInstance(Application.Context);
+            syncLock = new object();
+            client = LocationServices.GetGeofencingClient(Application.Context);
+            regions = MarcelloDatabase.Current.GetAll<GeofenceRegion>().ToList();
+        }
+        public GeofenceManagerStatus Status => GeofenceManagerStatus.Ready;
+        
+        public async Task<PermissionStatus> RequestPermission()
+        {
+            var result = await CrossPermissions
+                .Current
+                .RequestPermissionsAsync(Permission.LocationAlways)
+                .ConfigureAwait(false);
 
-            var dbRegions = MarcelloDatabase.Current.GetAll<DbGeofenceRegion>();
-            foreach (var dbRegion in dbRegions)
+            if (!result.ContainsKey(Permission.LocationAlways))
+                return PermissionStatus.Unknown;
+
+            return result[Permission.LocationAlways];
+        }
+
+        public IReadOnlyList<GeofenceRegion> MonitoredRegions
+        {
+            get
             {
-                var radius = Distance.FromMeters(dbRegion.CenterRadiusMeters);
-                var center = new Position(dbRegion.CenterLatitude, dbRegion.CenterLongitude);
-                var region = new GeofenceRegion(dbRegion.Identifier, center, radius);
-                var state = new GeofenceState(region);
-                _states.Add(dbRegion.Identifier, state);
+                lock (syncLock)
+                    return regions.ToList();
             }
         }
 
-        public void StartMonitoring(GeofenceRegion region)
+        public async void StartMonitoring(GeofenceRegion region)
         {
-            MarcelloDatabase.Current.Save(new DbGeofenceRegion
-            {
-                Identifier = region.Identifier,
-                CenterLatitude = region.Center.Latitude,
-                CenterLongitude = region.Center.Longitude,
-                CenterRadiusMeters = region.Radius.TotalMeters
-            });
-            var state = new GeofenceState(region);
-            _states.Add(region.Identifier, state);
-            AddGeofence(region.Identifier, region.Center.Latitude, region.Center.Longitude, Convert.ToInt32(region.Radius.TotalMeters));
-        }
+            var geofence = new GeofenceBuilder()
+                .SetRequestId(region.Identifier)
+                .SetExpirationDuration(Geofence.NeverExpire)
+                .SetCircularRegion(
+                    region.Center.Latitude,
+                    region.Center.Longitude,
+                    Convert.ToSingle(region.Radius.TotalMeters)
+                )
+                .SetTransitionTypes(
+                    Geofence.GeofenceTransitionEnter |
+                    Geofence.GeofenceTransitionExit
+                )
+                .Build();
 
-        void AddGeofence(string id, double latitude, double longtitude, int radiusInMeter)
-        {
-            _pathSenseApi?.AddGeofence(id, latitude, longtitude, radiusInMeter, Java.Lang.Class.FromType(typeof(PathsenseGeofenceDemoGeofenceEventReceiver)));
-        }
-        void AddGeofences()
-        {
-            foreach (var item in _states)
-                AddGeofence(item.Key,
-                            item.Value.Region.Center.Latitude,
-                            item.Value.Region.Center.Longitude,
-                            Convert.ToInt32(item.Value.Region.Radius.TotalMeters));
+            var request = new GeofencingRequest.Builder()
+                .AddGeofence(geofence)
+                .SetInitialTrigger(GeofencingRequest.InitialTriggerEnter | GeofencingRequest.InitialTriggerExit)
+                .Build();
+
+            await client.AddGeofencesAsync(request, GetPendingIntent());
+
+            lock (syncLock)
+            {
+                regions.Add(region);
+                MarcelloDatabase.Current.Save(region);
+
+                if (regions.Count == 1)
+                    Application.Context.StartService(new Intent(Application.Context, typeof(GeofenceIntentService)));
+            }
         }
 
         public void StopMonitoring(GeofenceRegion region)
         {
-            if (!_states.ContainsKey(region.Identifier))
-                return;
-            
-            MarcelloDatabase.Current.Delete<DbGeofenceRegion>(region.Identifier);
-            _pathSenseApi.RemoveGeofence(region.Identifier);
-            _states.Remove(region.Identifier);
+            lock (syncLock)
+            {
+                client.RemoveGeofences(new List<string> { region.Identifier });
+                if (regions.Remove(region))
+                    MarcelloDatabase.Current.Delete(region);
+
+                if (regions.Count == 0)
+                    Application.Context.StopService(new Intent(Application.Context, typeof(GeofenceIntentService)));
+            }
         }
 
         public void StopAllMonitoring()
         {
-            MarcelloDatabase.Current.DeleteAll<DbGeofenceRegion>();
-            _pathSenseApi.RemoveGeofences();
-            _states.Clear();
-        }
-
-        public void DoBroadcast(string triggeredGeofenceId, GeofenceStatus transitionType)
-        {
-            var reqId = triggeredGeofenceId;
-            if (!_states.ContainsKey(reqId))
-            {
-                System.Diagnostics.Debug.WriteLine($"Triggered geofence {reqId} is not in the local app database. Skipping. Remove this geofence maybe?");
+            if (regions.Count == 0)
                 return;
-            }
-            _states[reqId].Status = transitionType;
-            RegionStatusChanged?.Invoke(this, new GeofenceStatusChangedEventArgs(_states[reqId].Region, transitionType));
-        }
 
-        public void DoBroadcast(IList<IGeofence> triggeredGeofences, GeofenceStatus transitionType)
-        {
-            foreach (var triggeredGeofence in triggeredGeofences)
-                DoBroadcast(triggeredGeofence.RequestId, transitionType);
-        }
-
-        public void DoBroadcast(IList<IGeofence> triggeredGeofences, int transitionType)
-        {
-            DoBroadcast(triggeredGeofences, FromNative(transitionType));
-        }
-
-        protected virtual GeofenceStatus FromNative(int transitionType)
-        {
-            switch (transitionType)
+            lock (syncLock)
             {
-                case Geofence.GeofenceTransitionEnter:
-                    return GeofenceStatus.Entered;
-                case Geofence.GeofenceTransitionExit:
-                    return GeofenceStatus.Exited;
-                default:
-                    return GeofenceStatus.Unknown;
+                var ids = regions.Select(x => x.Identifier).ToList();
+                client.RemoveGeofences(ids);
+                regions.Clear();
+
+                Application.Context.StopService(new Intent(Application.Context, typeof(GeofenceIntentService)));
             }
         }
 
-        protected virtual IGeofence ToNative(GeofenceRegion region)
+        public Task<GeofenceStatus> RequestState(GeofenceRegion region, CancellationToken? cancelToken = null)
         {
-            return new GeofenceBuilder()
-                .SetRequestId(region.Identifier)
-                .SetCircularRegion(
-                    region.Center.Latitude,
-                    region.Center.Longitude,
-                    (float)region.Radius.TotalMeters
-                )
-                .SetExpirationDuration(Geofence.NeverExpire)
-                .SetTransitionTypes(Geofence.GeofenceTransitionEnter | Geofence.GeofenceTransitionExit)
-                .Build();
+            var foundRegion = regions.FirstOrDefault(x => x.Identifier.Equals(region.Identifier));
+            if (foundRegion == null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Triggered geofence does not exist in the list of watching geofences");
+                return Task.FromResult(GeofenceStatus.Unknown);
+            }
+            return Task.FromResult(foundRegion.LastKnownGeofenceStatus);
+        }
+
+        public event EventHandler<GeofenceStatusChangedEventArgs> RegionStatusChanged;
+        
+        protected virtual void OnRegionStatusChanged(GeofenceRegion region, GeofenceStatus status)
+            => RegionStatusChanged?.Invoke(this, new GeofenceStatusChangedEventArgs(region, status));
+
+
+        protected virtual PendingIntent GetPendingIntent()
+        {
+            if (geofencePendingIntent != null)
+                return geofencePendingIntent;
+
+            var intent = new Intent(Application.Context, typeof(GeofenceIntentService));
+            geofencePendingIntent = PendingIntent.GetService(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
+
+            return geofencePendingIntent;
+        }
+
+        internal void TryFireEvent(GeofencingEvent @event)
+        {
+            lock (syncLock)
+            {
+                var status = @event.GeofenceTransition == Geofence.GeofenceTransitionEnter
+                    ? GeofenceStatus.Entered
+                    : GeofenceStatus.Exited;
+
+                foreach (var native in @event.TriggeringGeofences)
+                {
+                    var region = regions.FirstOrDefault(x => x.Identifier.Equals(native.RequestId));
+                    if(region == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Triggered geofence does not exist in the list of watching geofences");
+                        return;
+                    }
+                    region.LastKnownGeofenceStatus = status;
+                    MarcelloDatabase.Current.Save(region);                    
+                    OnRegionStatusChanged(region, status);
+                }
+            }
         }
     }
 }

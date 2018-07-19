@@ -15,8 +15,8 @@
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
-    <Version>1.0.1</Version>
-    <PackageVersion>1.0.1</PackageVersion>
+    <Version>1.1.0</Version>
+    <PackageVersion>1.1.0</PackageVersion>
     <PackOnBuild>true</PackOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
@@ -60,9 +60,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="All" />
-    <Compile Include="**/Shared/**/*.cs" />
-    <None Include="**/Shared/**/*.cs" />
+    <Compile Remove="**/Platform/**/*.cs" />
+    <Compile Include="**/Platform/Shared/**/*.cs" />
+    <None Include="**/Platform/**/*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
@@ -70,23 +72,19 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <PackageReference Include="MarcelloDB">
-      <Version>1.0.7</Version>
-    </PackageReference>
-    <PackageReference Include="Pathsense.Location.Android.Eddy">
-      <Version>3.1.0.7</Version>
+      <Version>1.0.8</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Location">
       <Version>60.1142.1</Version>
     </PackageReference>
     <Compile Include="**/Platform/Android/**/*.cs" />
-    <None Include="**/Platform/Android/**/*.cs" />  
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
     <Compile Include="**/Platform/Apple/**/*.cs" />
-    <None Include="**/Platform/Apple/**/*.cs" />
   </ItemGroup>
-  
+
+
   <!--Additional item groups-->
   <!--
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
