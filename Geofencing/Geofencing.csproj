@@ -37,7 +37,7 @@
     
     <Title>Geofencing Plugin for Xamarin</Title>
     <Summary>Geofencing</Summary>
-    <Description>Geofencing using native iOS and the pathsense java library for Android.</Description>
+    <Description>Geofencing using native iOS and Android.</Description>
         
     <Owners>Eduard Schäfer</Owners>
     <Authors>Eduard Schäfer</Authors>
