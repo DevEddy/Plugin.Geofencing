@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Gms.Location;
-using Plugin.Geofencing.Platform.Android;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
@@ -82,9 +81,6 @@ namespace Plugin.Geofencing
             {
                 regions.Add(region);
                 MarcelloDatabase.Current.Save(region);
-
-                if (regions.Count == 1)
-                    Application.Context.StartService(new Intent(Application.Context, typeof(GeofenceIntentService)));
             }
         }
 
@@ -95,9 +91,6 @@ namespace Plugin.Geofencing
                 client.RemoveGeofences(new List<string> { region.Identifier });
                 if (regions.Remove(region))
                     MarcelloDatabase.Current.Delete(region);
-
-                if (regions.Count == 0)
-                    Application.Context.StopService(new Intent(Application.Context, typeof(GeofenceIntentService)));
             }
         }
 
@@ -111,8 +104,6 @@ namespace Plugin.Geofencing
                 var ids = regions.Select(x => x.Identifier).ToList();
                 client.RemoveGeofences(ids);
                 regions.Clear();
-
-                Application.Context.StopService(new Intent(Application.Context, typeof(GeofenceIntentService)));
             }
         }
 
@@ -138,31 +129,41 @@ namespace Plugin.Geofencing
             if (geofencePendingIntent != null)
                 return geofencePendingIntent;
 
-            var intent = new Intent(Application.Context, typeof(GeofenceIntentService));
-            geofencePendingIntent = PendingIntent.GetService(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
+            var intent = new Intent(Application.Context, typeof(GeofenceBroadcastReceiver));
+            geofencePendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
 
             return geofencePendingIntent;
         }
 
-        internal void TryFireEvent(GeofencingEvent @event)
+        internal void TryFireEvent(GeofencingEvent e)
         {
             lock (syncLock)
             {
-                var status = @event.GeofenceTransition == Geofence.GeofenceTransitionEnter
-                    ? GeofenceStatus.Entered
-                    : GeofenceStatus.Exited;
-
-                foreach (var native in @event.TriggeringGeofences)
+                try
                 {
-                    var region = regions.FirstOrDefault(x => x.Identifier.Equals(native.RequestId));
-                    if(region == null)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Triggered geofence does not exist in the list of watching geofences");
+                    var status = e.GeofenceTransition == Geofence.GeofenceTransitionEnter
+                        ? GeofenceStatus.Entered
+                        : GeofenceStatus.Exited;
+
+                    if (e.TriggeringGeofences == null)
                         return;
+
+                    foreach (var native in e.TriggeringGeofences)
+                    {
+                        var region = regions.FirstOrDefault(x => x.Identifier.Equals(native.RequestId));
+                        if (region == null)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Triggered geofence does not exist in the list of watching geofences");
+                            return;
+                        }
+                        region.LastKnownGeofenceStatus = status;
+                        MarcelloDatabase.Current.Save(region);
+                        OnRegionStatusChanged(region, status);
                     }
-                    region.LastKnownGeofenceStatus = status;
-                    MarcelloDatabase.Current.Save(region);                    
-                    OnRegionStatusChanged(region, status);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error in TryFireEvent: {ex.Message}");
                 }
             }
         }

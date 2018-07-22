@@ -1,6 +1,8 @@
-﻿namespace Plugin.Geofencing
+﻿using System;
+
+namespace Plugin.Geofencing
 {
-    public class GeofenceRegion : IObjectIdentifier
+    public class GeofenceRegion : IObjectIdentifier, IEquatable<GeofenceRegion>
     {
         public GeofenceRegion(string identifier, Position center, Distance radius)
         {
@@ -14,7 +16,20 @@
         public Distance Radius { get; set; }
         public GeofenceStatus LastKnownGeofenceStatus { get; set; }
 
-        public override bool Equals(object obj) => Identifier.Equals(obj);
+        public bool Equals(GeofenceRegion other)
+        {
+            if (other == null) return false;
+            return other.Identifier.Equals(other.Identifier);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is GeofenceRegion region))
+                return false;
+
+            return Equals(region);
+        }
+
         public override int GetHashCode() => Identifier.GetHashCode();
     }
 }
