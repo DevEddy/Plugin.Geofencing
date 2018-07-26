@@ -4,6 +4,7 @@ using Plugin.Geolocator;
 using Prism.Commands;
 using Prism.Navigation;
 using System;
+using Xamarin.Forms;
 
 namespace Geofencing.Sample.ViewModels
 {
@@ -89,6 +90,8 @@ namespace Geofencing.Sample.ViewModels
                     new Position(Place.Latitude, Place.Longitude),
                     Distance.FromMeters(Place.Radius)
                 ));
+
+                MessagingCenter.Send("", "StartGeofencingService", "");
 
                 await NavigationService.GoBackAsync();
             }

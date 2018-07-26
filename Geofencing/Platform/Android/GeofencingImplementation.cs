@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: UsesPermission(Android.Manifest.Permission.AccessFineLocation)]
+[assembly: UsesPermission(Android.Manifest.Permission.WakeLock)]
 [assembly: UsesFeature("android.hardware.location.gps")]
 [assembly: UsesFeature("android.hardware.location.network")]
 namespace Plugin.Geofencing
@@ -81,6 +82,9 @@ namespace Plugin.Geofencing
             {
                 regions.Add(region);
                 MarcelloDatabase.Current.Save(region);
+
+                //if (regions.Count == 1)
+                //    Application.Context.StartForegroundService(new Intent(Application.Context, typeof(GeofenceBroadcastReceiver)));
             }
         }
 
@@ -91,6 +95,9 @@ namespace Plugin.Geofencing
                 client.RemoveGeofences(new List<string> { region.Identifier });
                 if (regions.Remove(region))
                     MarcelloDatabase.Current.Delete(region);
+
+                //if (regions.Count == 0)
+                //    Application.Context.StopService(new Intent(Application.Context, typeof(GeofenceBroadcastReceiver)));
             }
         }
 
@@ -104,6 +111,9 @@ namespace Plugin.Geofencing
                 var ids = regions.Select(x => x.Identifier).ToList();
                 client.RemoveGeofences(ids);
                 regions.Clear();
+
+                //if (regions.Count == 0)
+                //    Application.Context.StopService(new Intent(Application.Context, typeof(GeofenceBroadcastReceiver)));
             }
         }
 

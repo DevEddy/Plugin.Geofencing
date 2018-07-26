@@ -33,6 +33,9 @@ namespace Geofencing.Sample
 
         protected override void OnStart()
         {
+            if(Plugin.Geofencing.CrossGeofencing.Current.MonitoredRegions.Count >  0) 
+                MessagingCenter.Send("", "StartGeofencingService", "");
+
             Plugin.Geofencing.CrossGeofencing.Current.RegionStatusChanged += Current_RegionStatusChanged;
             base.OnStart();
         }

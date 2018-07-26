@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Android.Util;
 
 namespace Plugin.Geofencing
 {
@@ -7,6 +8,7 @@ namespace Plugin.Geofencing
     {
         public override void OnReceive(Context context, Intent intent)
         {
+            Log.Info("GeofenceBroadcastReceiver", "Geofencing OnReceive");
             // Enqueues a JobIntentService passing the context and intent as parameters
             GeofenceTransitionsJobIntentService.EnqueueWork(context, intent);
         }

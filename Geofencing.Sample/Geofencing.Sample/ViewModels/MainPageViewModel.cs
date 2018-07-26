@@ -86,6 +86,9 @@ namespace Geofencing.Sample.ViewModels
                                        new Position(place.Latitude, place.Longitude),
                                        Distance.FromMeters(place.Radius)));
                 
+                if(!CrossGeofencing.Current.MonitoredRegions.Any())
+                    MessagingCenter.Send("", "StopGeofencingService", "");
+
                 LoadCommand.Execute();
             }
             catch (Exception ex)
