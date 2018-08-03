@@ -94,6 +94,7 @@
     <Compile Include="MainApplication.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BootBroadcastReceiver.cs" />
     <Compile Include="Services\GeofencingHelper.cs" />
     <Compile Include="Services\GeofencingServiceBinder.cs" />
   </ItemGroup>
