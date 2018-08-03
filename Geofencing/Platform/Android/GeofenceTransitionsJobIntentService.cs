@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Gms.Location;
 using Android.Support.V4.App;
+using Android.Util;
 
 namespace Plugin.Geofencing
 {
@@ -17,8 +18,15 @@ namespace Plugin.Geofencing
 
         protected override void OnHandleWork(Intent intent)
         {
+            var geofencingEvent = GeofencingEvent.FromIntent(intent);
+            if (geofencingEvent.HasError)
+            {
+                Log.Info("GeofenceTransitionsJobIntentService", $"{geofencingEvent.ErrorCode}");
+                return;
+            }
+
             if (CrossGeofencing.Current is GeofencingImplementation managerImpl)
-                managerImpl.TryFireEvent(GeofencingEvent.FromIntent(intent));
+                managerImpl.TryFireEvent(geofencingEvent);
         }
     }
 }
