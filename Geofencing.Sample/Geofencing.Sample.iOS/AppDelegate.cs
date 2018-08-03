@@ -22,6 +22,9 @@ namespace Geofencing.Sample.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+                UNUserNotificationCenter.Current.Delegate = new UserNotificationCenterDelegate();
+
             Xamarin.Forms.Forms.Init();
             Syncfusion.ListView.XForms.iOS.SfListViewRenderer.Init();
             new Syncfusion.SfRangeSlider.XForms.iOS.SfRangeSliderRenderer();
